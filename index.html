@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social and Professional Issues Reviewer</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            text-align: center;
+            padding: 20px;
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease-in-out;
+            color: black;
+        }
+        .question {
+            display: none;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 20px;
+            animation: slideIn 0.5s ease-in-out;
+        }
+        .answer {
+            display: none;
+            font-size: 18px;
+            color: #444;
+            margin-top: 10px;
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            animation: fadeIn 0.5s ease-in-out;
+            text-align: left;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .center-btn {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        button {
+            padding: 12px 20px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #d43f3f;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Social and Professional Issues Reviewer</h1>
+        <p>Click below to start reviewing.</p>
+        <button onclick="startReview()">Start</button>
+        <div id="reviewContent" class="question"></div>
+        <div id="answerContent" class="answer"></div>
+        <div class="center-btn">
+            <button id="showAnswerBtn" style="display:none;" onclick="showAnswer()">Show Answer</button>
+        </div>
+        <div class="button-container">
+            <button id="prevBtn" style="display:none;" onclick="prevQuestion()">Previous</button>
+            <button id="nextBtn" style="display:none;" onclick="nextQuestion()">Next</button>
+        </div>
+    </div>
+
+    <script>
+        let questions = [
+            { q: "What is professionalism?", a: "Professionalism refers to the competence, skill, and conduct expected of an individual in a professional setting." },
+            { q: "What is Non-professionalism?", a: " include craftspeople, plumbers, electricians, installers, and food service workers or, in general, positions that primarily entail manual labor duties and trade skills learned through an apprenticeship or training program." },
+            { q: "Define ethics and its importance in computing.", a: "1. Ethics in computing ensures responsible use of technology, protecting privacy, security, and intellectual property." },
+            { q: "List and explain the 7 attributes of professionalism.", a: "1. Competency\n2. Reliability\n3. Honesty\n4. Self-control\n5. Flexibility\n6. Respect\n7. Professional Image" },
+            { q: "What are the 10 commandments of computer ethics?", a: "1. Respect privacy\n2. Avoid harm\n3. Do not snoop\n4. No stealing\n5. No false witness\n6. Do not copy proprietary software\n7. Respect others' resources\n8. Do not appropriate others' intellectual output\n9. Consider social impact\n10. Use computers responsibly." },
+            { q: "Discuss the impact of technology on privacy and security.", a: "1. Data breaches\n2. Surveillance\n3. Identity theft\n4. Cybersecurity threats\n5. Encryption and data protection measures." },
+                        { q: "Four Main Branches of ethics?", a: "1. Descriptive Ethics\n2. Normative Ethics\n3. Meta-Ethics\n4. Applied Ethics."},
+            { q: "Attributes of Professionalism", a: "1. Competency\n2. Reliability and Accountability\n3. Integrity and Honesty\n4. Self-control\n5. Flexibility\n6. Respect for Others\n7. Professional images."},
+            { q: "The three significant vocations are:", a: "1. Single Life\n2. Married Life\n3. Religious Life."},
+            { q: "is the study of underlying things. ..A philosophy can also mean a group of ideas by philosophers, or by a philosopher. Philosophy is a way of thinking about the world, the universe, and society.", a: "Philosophy"},
+            { q: "among the most famous figures in world history for his contributions to the development of ancient Greek philosophy which provided the foundation for all of Western Philosophy.", a: "Socrates of Athens"},
+            { q: "What is hacking?", a: "Unlawful intrusion into a computer or network." },
+            { q: "What is malware?", a: "Malicious software designed to impair a computer system." },
+            { q: "What is data protection?", a: "Safeguarding personal data while allowing business use." },
+            { q: "What is anonymity?", a: "Keeping a user’s identity masked through various applications." },
+            { q: "What is copyright?", a: "Grants exclusive rights to an author’s work." },
+            { q: "What is plagiarism?", a: "Copying another person’s work without proper citation." },
+            { q: "What is cracking?", a: "Breaking into a system by bypassing security features." },
+            { q: "What is a software license?", a: "Governs the use of digital materials under an agreement." },
+            { q: "How does technology affect jobs?", a: "Automation has simplified tasks but removed some jobs." },
+            { q: "What are health concerns in technology use?", a: "Extended screen time impacts health." },
+            { q: "What is the environmental impact of technology?", a: "Increased energy usage and greenhouse gas emissions." },
+            { q: "What is the social impact of technology?", a: "Enhances communication but also affects behavior." }
+        ];
+        
+        questions = questions.sort(() => Math.random() - 0.5);
+        let index = 0;
+        
+        function startReview() {
+            document.querySelector("button").style.display = "none";
+            document.getElementById("reviewContent").style.display = "block";
+            document.getElementById("showAnswerBtn").style.display = "block";
+            document.getElementById("nextBtn").style.display = "block";
+            document.getElementById("prevBtn").style.display = "block";
+            updateContent();
+        }
+        function nextQuestion() {
+            if (index < questions.length - 1) {
+                index++;
+                updateContent();
+            }
+        }
+        function prevQuestion() {
+            if (index > 0) {
+                index--;
+                updateContent();
+            }
+        }
+        function updateContent() {
+            document.getElementById("reviewContent").innerText = questions[index].q;
+            document.getElementById("answerContent").style.display = "none";
+            document.getElementById("answerContent").innerText = questions[index].a;
+        }
+        function showAnswer() {
+            document.getElementById("answerContent").style.display = "block";
+        }
+    </script>
+</body>
+</html>
